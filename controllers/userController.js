@@ -3,6 +3,7 @@ const { User, Page } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+// Get all users
 router.get('/', (req, res) => {
     User.findAll({
         include: [
@@ -21,6 +22,7 @@ router.get('/', (req, res) => {
     });
 });
 
+// Get user by ID
 router.get("/:id", (req, res) => {
     User.findByPk(req.params.id, {
         include: [
@@ -97,6 +99,7 @@ router.post('/login', (req, res) => {
     });
 });
 
+// Verify Token
 router.get("/auth/verifytoken",(req,res)=>{
     const token = req.headers.authorization?.split(" ")[1];
     try {
@@ -111,6 +114,7 @@ router.get("/auth/verifytoken",(req,res)=>{
     }
 });
 
+// Update a user
 // router.put('/:userid', (req, res) => {
 //     const userId = req.params.id;
 //     const userData = req.body;
@@ -118,6 +122,7 @@ router.get("/auth/verifytoken",(req,res)=>{
 //     User.
 // })
 
+// Delete a user
 router.delete('/:userid', (req, res) => {
     User.destroy({
         where: {id: req.params.userid}
