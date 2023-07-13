@@ -115,17 +115,29 @@ router.get("/auth/verifytoken",(req,res)=>{
 });
 
 // Update a user
-// router.put('/:userid', (req, res) => {
-//     const userId = req.params.id;
-//     const userData = req.body;
+router.put('/:id', (req, res) => {
+    const userId = req.params.id;
+    const userData = req.body;
 
-//     User.
-// })
+    const user = User.findByPk(userId)
+    if(!user) {
+        return res.status(404).json({msg: "user not found"});
+    };
+    User.update(userData, {where:{id:userId}})
+    .then(users => {
+        res.json(users)
+    }).catch(err => {
+        console.log(err)
+        res.status(500).json({
+            msg:"error", err
+        });
+    });
+});
 
 // Delete a user
-router.delete('/:userid', (req, res) => {
+router.delete('/id', (req, res) => {
     User.destroy({
-        where: {id: req.params.userid}
+        where: {id: req.params.id}
     })
     .then(
         res.status(200).json({
