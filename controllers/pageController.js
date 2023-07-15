@@ -11,7 +11,6 @@ router.get('/', (req, res) => {
         ]
     })
     .then(pages => {
-        console.log(pages)
         res.json(pages)
     }).catch(err => {
         console.log(err)
