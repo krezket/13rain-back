@@ -1,11 +1,20 @@
 const router = require('express').Router();
-const { Page } = require('../models');
+const { Page, User } = require('../models');
 
 router.get('/', (req, res) => {
-    Page.findAll()
+    Page.findAll({
+        include: [
+            {
+                model: User,
+                as: 'users',
+            }
+        ]
+    })
     .then(pages => {
+        console.log(pages)
         res.json(pages)
     }).catch(err => {
+        console.log(err)
         res.status(500).json({
             msg:"error", err
         });

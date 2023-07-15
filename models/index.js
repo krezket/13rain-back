@@ -10,7 +10,7 @@ User.hasMany(Page, {
 Page.belongsTo(User, {
     onDelete: 'CASCADE',
     foreignKey: 'owner_id',
-    as: 'pages',
+    as: 'users',
 });
 
 module.exports = { User, Page };
