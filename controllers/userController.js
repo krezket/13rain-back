@@ -44,6 +44,28 @@ router.get("/:id", (req, res) => {
     });
 });
 
+// GET PROFILE BY USERNAME
+router.get("/profile/:username", (req, res) => {
+    User.findOne({where: {username: req.params.username},
+        include: [
+            {
+                model: Page,
+                as: 'pages',
+            },
+        ],
+    })
+    .then(userData => {
+        if(!userData) {
+            return res.status(404).json({msg: "bruh"})
+        }
+
+        res.json(userData);
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({msg:"womp womp", err})
+    });
+});
+
 // Create a user
 router.post('/', (req, res) => {
     console.log(req.body)
