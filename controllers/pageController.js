@@ -21,14 +21,7 @@ router.get('/', (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-    Page.findByPk(req.params.id, {
-        include: [
-            {
-                model: Page,
-                as: 'pages',
-            },
-        ],
-    })
+    Page.findByPk(req.params.id)
     .then(pageData => {
         if(!pageData) {
             return res.status(404).json({msg: "no such Page"})
