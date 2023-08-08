@@ -13,4 +13,6 @@ Page.belongsTo(User, {
     as: 'users',
 });
 
+// User.hasMany(User,)
+
 module.exports = { User, Page };
