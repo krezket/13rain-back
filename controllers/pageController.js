@@ -41,6 +41,16 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.get("/userpages/:id", (req, res) => {
+    Page.findAll({where: {owner_id: req.params.id}})
+    .then(userPages => {
+        res.json(userPages)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({msg:"womp womp", err})
+    });
+})
+
 router.post('/', (req, res) => {
     console.log(req.body)
     Page.create(req.body)
