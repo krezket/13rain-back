@@ -65,4 +65,21 @@ router.post('/', (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+    Page.destroy({
+        where: {id: req.params.id}
+    })
+    .then(
+        res.status(200).json({
+            msg: "Deleted"
+        })
+    ).catch(err => {
+        console.log(err)
+        res.status(500).json({
+            msg:"error deleting user",
+            err
+        });
+    });
+});
+
 module.exports = router;
