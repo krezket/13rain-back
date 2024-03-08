@@ -30,7 +30,7 @@ Page.init(
             defaultValue: 0,
         },
         comments: {
-            type: DataTypes.TEXT,
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
     },{
