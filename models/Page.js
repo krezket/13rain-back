@@ -11,7 +11,7 @@ Page.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        title: {
+        title: {    
             type: DataTypes.STRING,
             allowNull: false,
         },
