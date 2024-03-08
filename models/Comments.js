@@ -33,3 +33,5 @@ Comments.init(
         sequelize
     }
 );
+
+module.exports = Comments;

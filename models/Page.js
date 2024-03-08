@@ -11,7 +11,7 @@ Page.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        title: {
+        title: {    
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -24,10 +24,6 @@ Page.init(
             allowNull: true,
         },
         dislikes: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        comments: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
