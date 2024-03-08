@@ -19,6 +19,18 @@ Page.init(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        likes: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        dislikes: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        comments: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
     },{
         sequelize
     }
