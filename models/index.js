@@ -28,4 +28,4 @@ Comments.belongsTo(Page, {
 
 // User.hasMany(User,)
 
-module.exports = { User, Page };
+module.exports = { User, Page, Comments };
