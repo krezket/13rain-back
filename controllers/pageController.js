@@ -37,6 +37,16 @@ router.get("/:id", (req, res) => {
                 model: User,
                 as: 'users',
             },
+            {
+                model: Comments,
+                as: 'comments',
+                include: [
+                    {
+                        model: User,
+                        as: 'users',
+                    }
+                ]
+            }
         ],
     })
     .then(pageData => {
