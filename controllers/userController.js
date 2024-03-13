@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Page } = require('../models');
+const { User, Page, Comments } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -11,6 +11,10 @@ router.get('/', (req, res) => {
                 model: Page,
                 as: 'pages',
             },
+            {
+                model: Comments,
+                as: 'comments',
+            }
         ]
     })
     .then(users => {

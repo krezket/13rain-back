@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Page, User } = require('../models');
+const { Page, User, Comments } = require('../models');
 
 router.get('/', (req, res) => {
     Page.findAll({
@@ -7,6 +7,16 @@ router.get('/', (req, res) => {
             {
                 model: User,
                 as: 'users',
+            },
+            {
+                model: Comments,
+                as: 'comments',
+                include: [
+                    {
+                        model: User,
+                        as: 'users',
+                    }
+                ]
             }
         ]
     })
