@@ -10,16 +10,7 @@ const path = require("path");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-// Serve static assets (client build folder)
-app.use(express.static(path.resolve(__dirname, 'client', 'build')));
-
-// Define API routes
 app.use('/', allRoutes);
-
-// Catch all other routes and serve the index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
 
 const server = http.createServer(app);
 

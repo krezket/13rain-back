@@ -13,6 +13,11 @@ Page.belongsTo(User, {
     foreignKey: 'owner_id',
     as: 'users',
 });
+User.hasMany(User, {
+    onDelete: 'CASCADE',
+    foreignKey: 'owner_id',
+    as: 'friends',
+});
 ////////////////////////////
 User.hasMany(Comments, {
     onDelete: 'CASCADE',
