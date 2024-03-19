@@ -1,6 +1,7 @@
 const User = require('./User');
 const Page = require('./Page');
 const Comments = require('./Comments');
+const Friendship = require('./Friendship');
 
 User.hasMany(Page, {
     onDelete: 'CASCADE',
@@ -16,6 +17,14 @@ Page.belongsTo(User, {
 User.hasMany(User, {
     onDelete: 'CASCADE',
     foreignKey: 'owner_id',
+    as: 'friends',
+});
+////////////////////////////
+User.belongsToMany(User, {
+    through: 'friendship',
+    onDelete: 'CASCADE',
+    foreignKey: 'user_id',
+    otherKey: 'friend_id',
     as: 'friends',
 });
 ////////////////////////////
