@@ -38,6 +38,10 @@ router.get("/:id", (req, res) => {
                 model: Page,
                 as: 'pages',
             },
+            {
+                model: User,
+                as: 'friends',
+            }
         ],
     })
     .then(userData => {
@@ -60,6 +64,10 @@ router.get("/profile/:username", (req, res) => {
                 model: Page,
                 as: 'pages',
             },
+            {
+                model: User,
+                as: 'friends',
+            }
         ],
     })
     .then(userData => {
