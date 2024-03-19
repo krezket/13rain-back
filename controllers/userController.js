@@ -14,6 +14,10 @@ router.get('/', (req, res) => {
             {
                 model: Comments,
                 as: 'comments',
+            },
+            {
+                model: User,
+                as: 'friends',
             }
         ]
     })
@@ -159,6 +163,56 @@ router.put('/:id', (req, res) => {
         });
     });
 });
+
+// Add a friend
+router.put('/addfriend/:id', async (req, res) => {
+    const userId = req.params.id;
+    const friendId = req.body.friend_id; // Assuming your request body contains the ID of the friend to add
+
+    try {
+        // Check if the user exists
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        // Check if the friend exists
+        const friend = await User.findByPk(friendId);
+        if (!friend) {
+            return res.status(404).json({ msg: "Friend not found" });
+        }
+
+        // Add friend association
+        await user.addFriend(friend);
+
+        res.json({ msg: "Friend added successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Internal server error" });
+    }
+});
+
+// router.put('/addfriend/:id', (req, res) => {
+//     const userId = req.params.id;
+//     console.log(userId)   
+//     const friendData = req.body;
+//     console.log(friendData)
+
+//     const user = User.findByPk(userId)
+//     if(!user) {
+//         return res.status(404).json({msg: "user not found"});
+//     };
+//     console.log(user)   
+//     User.update(friendData, {where:{id:userId}})
+//     .then(friend => {
+//         res.json(friend)
+//     }).catch(err => {
+//         console.log(err)
+//         res.status(500).json({
+//             msg:"error", err
+//         });
+//     });
+// });
 
 // Delete a user
 router.delete('/id', (req, res) => {
