@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Page, Comments } = require('../models');
+const { User, Page, Comments, Follow } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -17,7 +17,11 @@ router.get('/', (req, res) => {
             },
             {
                 model: User,
-                as: 'friends',
+                as: 'followers',
+            },
+            {
+                model: User,
+                as: 'following',
             }
         ]
     })
@@ -40,7 +44,11 @@ router.get("/:id", (req, res) => {
             },
             {
                 model: User,
-                as: 'friends',
+                as: 'followers',
+            },
+            {
+                model: User,
+                as: 'following',
             }
         ],
     })
@@ -66,7 +74,11 @@ router.get("/profile/:username", (req, res) => {
             },
             {
                 model: User,
-                as: 'friends',
+                as: 'followers',
+            },
+            {
+                model: User,
+                as: 'following',
             }
         ],
     })
@@ -175,23 +187,26 @@ router.put('/:id', (req, res) => {
 // Add a friend
 router.put('/addfriend/:id', async (req, res) => {
     const userId = req.params.id;
-    const friendId = req.body.friend_id; // Assuming your request body contains the ID of the friend to add
+    const friendId = req.body.follow_id; // Assuming your request body contains the ID of the friend to add
 
     try {
-        // Check if the user exists
         const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).json({ msg: "User not found" });
         }
+        // console.log(user.User.id, user.User.username)
 
-        // Check if the friend exists
         const friend = await User.findByPk(friendId);
         if (!friend) {
             return res.status(404).json({ msg: "Friend not found" });
         }
+        console.log(friend.dataValues.id, friend.dataValues.username)
 
-        // Add friend association
-        await user.addFriend(friend);
+        // Add friend to user's following list
+        await user.addFollowing(friend, { through: { attributes: ['password', 'bio'] } });
+
+        // Add user to friend's followers list
+        await friend.addFollower(user, { through: { attributes: ['password', 'bio'] } });
 
         res.json({ msg: "Friend added successfully" });
     } catch (error) {

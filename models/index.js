@@ -1,7 +1,7 @@
 const User = require('./User');
 const Page = require('./Page');
 const Comments = require('./Comments');
-const Friendship = require('./Friendship');
+const Follow = require('./Follow');
 
 User.hasMany(Page, {
     onDelete: 'CASCADE',
@@ -14,19 +14,24 @@ Page.belongsTo(User, {
     foreignKey: 'owner_id',
     as: 'users',
 });
-User.hasMany(User, {
-    onDelete: 'CASCADE',
-    foreignKey: 'owner_id',
-    as: 'friends',
-});
+// User.hasMany(User, {
+//     onDelete: 'CASCADE',
+//     foreignKey: 'owner_id',
+//     as: 'friends',
+// });
 ////////////////////////////
-User.belongsToMany(User, {
-    through: 'friendship',
-    onDelete: 'CASCADE',
-    foreignKey: 'user_id',
-    otherKey: 'friend_id',
-    as: 'friends',
-});
+User.belongsToMany(User, { 
+    as: 'followers',
+    through: Follow,
+    foreignKey: 'followingId' 
+  });
+  User.belongsToMany(User, { 
+    as: 'following',
+    through: Follow,
+    foreignKey: 'followerId' 
+  });
+Follow.belongsTo(User, { foreignKey: 'followerId' });
+Follow.belongsTo(User, { foreignKey: 'followingId' });
 ////////////////////////////
 User.hasMany(Comments, {
     onDelete: 'CASCADE',
