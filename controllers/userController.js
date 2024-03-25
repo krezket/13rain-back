@@ -18,10 +18,12 @@ router.get('/', (req, res) => {
             {
                 model: User,
                 as: 'followers',
+                attributes: { exclude: ['password', 'bio'] }
             },
             {
                 model: User,
                 as: 'following',
+                attributes: { exclude: ['password', 'bio'] }
             }
         ]
     })
@@ -45,10 +47,12 @@ router.get("/:id", (req, res) => {
             {
                 model: User,
                 as: 'followers',
+                attributes: { exclude: ['password', 'bio'] }
             },
             {
                 model: User,
                 as: 'following',
+                attributes: { exclude: ['password', 'bio'] }
             }
         ],
     })
@@ -75,10 +79,12 @@ router.get("/profile/:username", (req, res) => {
             {
                 model: User,
                 as: 'followers',
+                attributes: {exclude: ['password', 'bio']}
             },
             {
                 model: User,
                 as: 'following',
+                attributes: {exclude: ['password', 'bio']}
             }
         ],
     })
@@ -194,19 +200,17 @@ router.put('/addfriend/:id', async (req, res) => {
         if (!user) {
             return res.status(404).json({ msg: "User not found" });
         }
-        // console.log(user.User.id, user.User.username)
 
         const friend = await User.findByPk(friendId);
         if (!friend) {
             return res.status(404).json({ msg: "Friend not found" });
         }
-        console.log(friend.dataValues.id, friend.dataValues.username)
 
         // Add friend to user's following list
-        await user.addFollowing(friend, { through: { attributes: ['password', 'bio'] } });
+        await user.addFollowing(friend);
 
         // Add user to friend's followers list
-        await friend.addFollower(user, { through: { attributes: ['password', 'bio'] } });
+        await friend.addFollower(user);
 
         res.json({ msg: "Friend added successfully" });
     } catch (error) {
