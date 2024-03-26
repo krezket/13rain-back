@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Page, Comments } = require('../models');
+const { User, Page, Comments, Follow } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -17,7 +17,13 @@ router.get('/', (req, res) => {
             },
             {
                 model: User,
-                as: 'friends',
+                as: 'followers',
+                attributes: { exclude: ['password', 'bio'] }
+            },
+            {
+                model: User,
+                as: 'following',
+                attributes: { exclude: ['password', 'bio'] }
             }
         ]
     })
@@ -40,7 +46,13 @@ router.get("/:id", (req, res) => {
             },
             {
                 model: User,
-                as: 'friends',
+                as: 'followers',
+                attributes: { exclude: ['password', 'bio'] }
+            },
+            {
+                model: User,
+                as: 'following',
+                attributes: { exclude: ['password', 'bio'] }
             }
         ],
     })
@@ -66,7 +78,13 @@ router.get("/profile/:username", (req, res) => {
             },
             {
                 model: User,
-                as: 'friends',
+                as: 'followers',
+                attributes: {exclude: ['password', 'bio']}
+            },
+            {
+                model: User,
+                as: 'following',
+                attributes: {exclude: ['password', 'bio']}
             }
         ],
     })
@@ -142,7 +160,28 @@ router.get("/auth/verifytoken",(req,res)=>{
     const token = req.headers.authorization?.split(" ")[1];
     try {
         const data = jwt.verify(token,process.env.JWT_SECRET)
-        User.findByPk(data.userId)
+        User.findByPk(data.userId, {
+            include: [
+                // {
+                //     model: Page,
+                //     as: 'pages',
+                // },
+                // {
+                //     model: Comments,
+                //     as: 'comments',
+                // },
+                {
+                    model: User,
+                    as: 'followers',
+                    attributes: { exclude: ['password', 'bio'] }
+                },
+                {
+                    model: User,
+                    as: 'following',
+                    attributes: { exclude: ['password', 'bio'] }
+                }
+            ]
+        })
         .then(foundUser=>{
             res.json(foundUser)
         })
@@ -175,23 +214,24 @@ router.put('/:id', (req, res) => {
 // Add a friend
 router.put('/addfriend/:id', async (req, res) => {
     const userId = req.params.id;
-    const friendId = req.body.friend_id; // Assuming your request body contains the ID of the friend to add
+    const friendId = req.body.follow_id; // Assuming your request body contains the ID of the friend to add
 
     try {
-        // Check if the user exists
         const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).json({ msg: "User not found" });
         }
 
-        // Check if the friend exists
         const friend = await User.findByPk(friendId);
         if (!friend) {
             return res.status(404).json({ msg: "Friend not found" });
         }
 
-        // Add friend association
-        await user.addFriend(friend);
+        // Add friend to user's following list
+        await user.addFollowing(friend);
+
+        // Add user to friend's followers list
+        await friend.addFollower(user);
 
         res.json({ msg: "Friend added successfully" });
     } catch (error) {
