@@ -160,7 +160,28 @@ router.get("/auth/verifytoken",(req,res)=>{
     const token = req.headers.authorization?.split(" ")[1];
     try {
         const data = jwt.verify(token,process.env.JWT_SECRET)
-        User.findByPk(data.userId)
+        User.findByPk(data.userId, {
+            include: [
+                // {
+                //     model: Page,
+                //     as: 'pages',
+                // },
+                // {
+                //     model: Comments,
+                //     as: 'comments',
+                // },
+                {
+                    model: User,
+                    as: 'followers',
+                    attributes: { exclude: ['password', 'bio'] }
+                },
+                {
+                    model: User,
+                    as: 'following',
+                    attributes: { exclude: ['password', 'bio'] }
+                }
+            ]
+        })
         .then(foundUser=>{
             res.json(foundUser)
         })
