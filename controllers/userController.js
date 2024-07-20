@@ -254,6 +254,35 @@ router.put('/addfriend/:id', async (req, res) => {
     }
 });
 
+// Remove a friend
+router.put('/removefriend/:id', async (req, res) => {
+    const userId = req.params.id;
+    const friendId = req.body.follow_id;
+
+    try {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        const friend = await User.findByPk(friendId);
+        if (!friend) {
+            return res.status(404).json({ msg: "Friend not found" });
+        }
+
+        // Remove friend from user's following list
+        await user.removeFollowing(friend);
+
+        // Remove user from friend's followers list
+        await friend.removeFollower(user);
+
+        res.json({ msg: "Friend removed successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Internal server error" });
+    }
+});
+
 // Delete a user
 router.delete('/id', async (req, res) => {
     try {
